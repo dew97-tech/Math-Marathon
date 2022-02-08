@@ -22,6 +22,7 @@ const playAgainBtn = document.querySelector(".play-again");
 let questionAmount = 0;
 let equationsArray = [];
 let playerGuessArray = [];
+let bestScoreArray = [];
 
 // Game Page
 let firstNumber = 0;
@@ -35,10 +36,42 @@ let timePlayed = 0;
 let baseTime = 0;
 let penaltyTime = 0;
 let finalTime = 0;
-let finalTimeDisplay = "0.0s";
+let finalTimeDisplay = "0.0";
 
 // Scroll;
 let valueY = 0;
+
+//Refresh Splash Page , load best score
+function bestScoresToDOM() {
+    bestScores.forEach((bestScore, index) => {
+        const bestScoreEl = bestScore;
+        bestScoreEl.textContent = `${bestScoreArray[index].bestScore}s`;
+    });
+}
+
+// Check Local Storage , Set Best Score
+function getSaveBestScore() {
+    if (localStorage.getItem("bestScores")) {
+        bestScoreArray - JSON.parse(localStorage.bestScores);
+    } else {
+        bestScoreArray = [
+            {
+                question: 5,
+                bestScore: finalTimeDisplay,
+            },
+            {
+                question: 10,
+                bestScore: finalTimeDisplay,
+            },
+            {
+                question: 20,
+                bestScore: finalTimeDisplay,
+            },
+        ];
+        localStorage.setItem("bestScores", JSON.stringify(bestScoreArray));
+    }
+    bestScoresToDOM();
+}
 
 // Reset game
 function playAgain() {
@@ -269,3 +302,6 @@ startForm.addEventListener("click", () => {
 //Event Listeners
 startForm.addEventListener("submit", selectQuestionAmount);
 gamePage.addEventListener("click", startTimer);
+
+// on load , check local Storage
+getSaveBestScore();
